@@ -106,37 +106,40 @@ const minmax = function() {
     let idealMoves = [];
     let neutralMoves = [];
     let badMoves = [];
+    let badMovesDepth = [];
     
     for (let i = 0; i < board.length; i++) {
-        let value = 10;
+        let value = [10, 0];
         if (board[i] == 0) {
             board[i] = turn;
-            value = Math.min(value, abMaxVal(-10, 10))
+            value = minimum(value, abMaxVal(0, -10, 10))
             board[i] = 0;
 
-            if (value < 0) {
+            if (value[0] < 0) {
                 idealMoves.push(i);
-            } else if (value == 0) {
+            } else if (value[0] == 0) {
                 neutralMoves.push(i);
             } else {
                 badMoves.push(i);
+                badMovesDepth.push(value[1]);
             }
         }
     }
     
     // Select square for CPU move
-    // Randomness for Easy's first 2 moves
-    // Randomness for Medium's first move
+    // Randomness for Easy and Mediums first 1 or 2 moves
     let randomVal = 0;
-    if (movesPlayed < 2 * difficulty) {
-        randomVal = Math.random();
+    if (movesPlayed < 3 && difficulty != 0) {
+        randomVal = Math.random() / (3 - difficulty);
     }
 
-    let square = badMoves[Math.floor(Math.random() * badMoves.length)];
-    if (idealMoves.length && randomVal < 0.33) {
+    let square = board.indexOf(0);
+    if (idealMoves.length && randomVal < 0.1) {
         square = idealMoves[Math.floor(Math.random() * idealMoves.length)];
-    } else if (neutralMoves.length && randomVal < 0.66) {
+    } else if (neutralMoves.length && randomVal < 0.25) {
         square = neutralMoves[Math.floor(Math.random() * neutralMoves.length)];
+    } else {
+        square = badMoves[argmax(badMovesDepth)];
     }
     console.log(idealMoves)
     console.log(neutralMoves)
@@ -144,57 +147,120 @@ const minmax = function() {
     return square;
 };
 
-const abMinVal = function(alpha, beta) {
+const argmax = function(arr) {
+    if (!arr.length) {
+        return -1;
+    }
+    
+    let max = arr[0];
+    let maxIndex = 0;
+    for (let i = 1; i < arr.length; i++) {
+        let randomSelector = Math.random();
+        if ((arr[i] > max) || (arr[i] == max && randomSelector > 0.5)) {
+            max = arr[i];
+            maxIndex = i;
+        }
+    }
+    return maxIndex;
+}
+
+const abMinVal = function(moves, alpha, beta) {
     let winner = checkWin(false);
     if (winner) {
-        return winner * -turn;
-        // return winner;
+        // return winner * -turn;
+        return [winner * -turn, moves];
     }
 
-    value = 10;
+    let value = [10, 0];
+    moves += 1;
     for (let i = 0; i < board.length; i++) {
         if (board[i] == 0) {
             board[i] = turn;
             // board[i] = -1;
-            value = Math.min(value, abMaxVal(alpha, beta))
+            // value = Math.min(value, abMaxVal(alpha, beta))
+            value = minimum(value, abMaxVal(moves, alpha, beta))
+
             board[i] = 0;
-            if (value <= alpha) {
+            if (value[0] <= alpha) {
+                // return value;
                 return value;
             }
-            beta = Math.min(beta, value);
+            beta = Math.min(beta, value[0]);
         }
     }
-    if (value == 10) {
-        return 0;
+    if (value[0] == 10) {
+        // return 0;
+        return [0, moves]
     }
-    return value;
+    // return value;
+    return value
 };
 
-const abMaxVal = function(alpha, beta) {
+const abMaxVal = function(moves, alpha, beta) {
     let winner = checkWin(false);
     if (winner) {
-        return winner * -turn;
-        // return winner;
+        // return winner * -turn;
+        return [winner * -turn, moves];
     }
 
-    value = -10;
+    let value = [-10, 0];
+    moves += 1;
     for (let i = 0; i < board.length; i++) {
         if (board[i] == 0) {
             board[i] = turn * -1;
             // board[i] = 1;
-            value = Math.max(value, abMinVal())
+            // value = Math.max(value, abMinVal())
+            value = maximum(value, abMinVal(moves, alpha, beta))
+
             board[i] = 0;
-            if (value >= beta) {
-                return value;
+            if (value[0] >= beta) {
+                // return value;
+                return value
             }
-            alpha = Math.max(alpha, value);
+            alpha = Math.max(alpha, value[0]);
         }
     }
-    if (value == -10) {
-        return 0;
+    if (value[0] == -10) {
+        // return 0;
+        return [0, moves]
     }
-    return value;
+    // return value;
+    return value
 };
+
+const minimum = function(values1, values2) {
+    if (values1[0] < values2[0]) {
+        return values1;
+    } else if (values1[0] > values2[0]) {
+        return values2;
+    } 
+
+    // index 1 result values are the same, so find larger moves/depth to prolong game
+    if (values1[1] > values2[1]) {
+        return values1;
+    } else if (values1[1] < values2[1]) {
+        return values2;
+    }
+
+    return values1;
+};
+
+const maximum = function(values1, values2) {
+    if (values1[0] > values2[0]) {
+        return values1;
+    } else if (values1[0] < values2[0]) {
+        return values2;
+    } 
+
+    // index 1 result values are the same, so find larger moves/depth to prolong game
+    if (values1[1] < values2[1]) {
+        return values1;
+    } else if (values1[1] > values2[1]) {
+        return values2;
+    }
+
+    return values1;
+}
 
 // redrawBoard()
 const clearCanvas = function() {
