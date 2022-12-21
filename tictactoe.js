@@ -14,7 +14,7 @@ const newGame = function(playerPiece, startDifficulty) {
     difficulty = startDifficulty;
     inGame = true;
     board = new Array(9).fill(0);
-    clearBoard();
+    clearBoard(); /////////////////////////////////////////////////////////
     clearCanvas();
 
     if (playerPiece == "O") {
@@ -30,11 +30,16 @@ const clearBoard = function() {
 
 const placePiece = function() {
     if (inGame && !document.getElementById(this.id).innerHTML) {
-        let piece = X_PIECE;
-        if (turn == -1) {
-            piece = O_PIECE;
+        // let piece = X_PIECE;
+        if (turn == 1) {
+            // piece = O_PIECE;
+            drawX(this.id[6]);
+        } else {
+            drawO(this.id[6]);
         }
-        document.getElementById(this.id).innerHTML = piece;
+        
+        // document.getElementById(this.id).innerHTML = piece;
+        
         board[this.id[6]] = turn;
         movesPlayed += 1;
         
@@ -82,14 +87,25 @@ const checkWin = function(drawWins) {
     return 0;
 };
 
+
+////
+//// Tic Tac Toe Bot min-max algorithm with alpha-beta pruning
+////
 const botTurn = function() {
     let squareNum = minmax();
-    let piece = X_PIECE;
-    if (turn == -1) {
-        piece = O_PIECE;
+    // let piece = X_PIECE;
+    // if (turn == -1) {
+    //     piece = O_PIECE;
+    // }
+    if (turn == 1) {
+        drawX(squareNum);
+    } else {
+        drawO(squareNum);
     }
-    console.log(squareNum)////////////////////////////////////////////////////
-    document.getElementById("square" + squareNum).innerHTML = piece;
+
+    console.log(squareNum) ////////////////////////////////////////////////////
+    
+    // document.getElementById("square" + squareNum).innerHTML = piece;
     board[squareNum] = turn;
     movesPlayed += 1;
     
@@ -136,14 +152,14 @@ const minmax = function() {
     let square = board.indexOf(0);
     if (idealMoves.length && randomVal < 0.1) {
         square = idealMoves[Math.floor(Math.random() * idealMoves.length)];
-    } else if (neutralMoves.length && randomVal < 0.25) {
+    } else if (neutralMoves.length && randomVal < 0.2) {
         square = neutralMoves[Math.floor(Math.random() * neutralMoves.length)];
     } else {
         square = badMoves[argmax(badMovesDepth)];
     }
-    console.log(idealMoves)
-    console.log(neutralMoves)
-    console.log(badMoves)
+    console.log(idealMoves) ////////////////////////////////////////////////////
+    console.log(neutralMoves) ////////////////////////////////////////////////////
+    console.log(badMoves) ////////////////////////////////////////////////////
     return square;
 };
 
@@ -262,14 +278,90 @@ const maximum = function(values1, values2) {
     return values1;
 }
 
-// redrawBoard()
+
+////
+//// Draw board and pieces on canvas
+////
 const clearCanvas = function() {
     let canvas = document.getElementById("game-canvas");
     let ctx = canvas.getContext("2d");
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw board later
+    // Redraw board
+    drawBoard();
+};
+
+const drawBoard = function() {
+    let canvas = document.getElementById("game-canvas");
+    let ctx = canvas.getContext("2d");
+
+    ctx.lineWidth = "20";
+    ctx.strokeStyle = "rgb(10, 10, 10)"; 
+    for (let col = 1; col <= 2; col++) {
+        ctx.beginPath();
+        ctx.moveTo(170 * col - 10, 0);
+        ctx.lineTo(170 * col - 10, 492);
+        ctx.stroke();
+    }
+
+    for (let row = 1; row <= 2; row++) {
+        ctx.beginPath();
+        ctx.moveTo(0, 170 * row - 10);
+        ctx.lineTo(492, 170 * row - 10);
+        ctx.stroke();
+    }
+
+    ctx.strokeStyle = "rgb(175, 120, 85)"; 
+    for (let col = 1; col <= 2; col++) {
+        ctx.beginPath();
+        ctx.moveTo(170 * col - 10, 0);
+        ctx.lineTo(170 * col - 10, 492);
+        ctx.stroke();
+    }
+
+    for (let row = 1; row <= 2; row++) {
+        ctx.beginPath();
+        ctx.moveTo(0, 170 * row - 10);
+        ctx.lineTo(492, 170 * row - 10);
+        ctx.stroke();
+    }
+};
+
+const drawX = function(square) {
+    let canvas = document.getElementById("game-canvas");
+    let ctx = canvas.getContext("2d");
+
+    let row = Math.floor(square / 3);
+    let col = square % 3;
+
+    ctx.lineWidth = "16";
+    ctx.strokeStyle = "rgb(96, 59, 42)";
+
+    ctx.beginPath();
+    ctx.moveTo(170 * col + 20, 170 * row + 20);
+    ctx.lineTo(170 * col + 130, 170 * row + 130);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(170 * col + 20, 170 * row + 130);
+    ctx.lineTo(170 * col + 130, 170 * row + 20);
+    ctx.stroke();
+};
+
+const drawO = function(square) {
+    let canvas = document.getElementById("game-canvas");
+    let ctx = canvas.getContext("2d");
+
+    let row = Math.floor(square / 3);
+    let col = square % 3;
+
+    ctx.lineWidth = "16";
+    ctx.strokeStyle = "rgb(96, 59, 42)";
+
+    ctx.beginPath();
+    ctx.arc(170 * col + 75, 170 * row + 75, 55, 0, 2 * Math.PI);
+    ctx.stroke();
 };
 
 const drawWin = function(first, last) {
@@ -283,14 +375,20 @@ const drawWin = function(first, last) {
     let col2 = last % 3;
 
     ctx.beginPath(); 
-    ctx.lineWidth="8";
-    ctx.strokeStyle="red"; 
-    ctx.moveTo(170*col1 + 76, 170*row1 + 75);
-    ctx.lineTo(170*col2 + 76, 170*row2 + 75);
+    ctx.lineWidth = "16"; 
+    ctx.strokeStyle = "red"; 
+    ctx.moveTo(170 * col1 + 76, 170 * row1 + 75);
+    ctx.lineTo(170 * col2 + 76, 170 * row2 + 75);
     ctx.stroke();
 };
 
+
+////
+//// Initialize and add event listeners
+////
 window.onload = function() {
+    drawBoard();
+    
     document.getElementById("game-settings").addEventListener("submit", (e) => {
         e.preventDefault();
 
