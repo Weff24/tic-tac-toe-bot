@@ -143,9 +143,9 @@ const minmax = function() {
     }
 
     let square = board.indexOf(0);
-    if (idealMoves.length && randomVal < 0.1) {
+    if ((idealMoves.length && randomVal < 0.1) || (!neutralMoves.length && !badMoves.length)) {
         square = idealMoves[Math.floor(Math.random() * idealMoves.length)];
-    } else if (neutralMoves.length && randomVal < 0.2) {
+    } else if ((neutralMoves.length && randomVal < 0.2) || (!badMoves.length)) {
         square = neutralMoves[Math.floor(Math.random() * neutralMoves.length)];
     } else {
         square = badMoves[argmax(badMovesDepth)];

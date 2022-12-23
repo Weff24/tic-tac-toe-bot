@@ -1,3 +1,16 @@
+* {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background-image: url("Assets/wood-background.png");
+}
+
+.title {
+    font-size: 32px;
+    font-weight: bold;
+}
+
 .grid-square {
     display: flex;
     justify-content: center;
@@ -16,6 +29,10 @@
     /* background-color: rgb(96, 59, 42); */
     background-color: rgb(146, 99, 70);
     border-radius: 20px;
+}
+
+#game-settings {
+    
 }
 
 #game-canvas {
