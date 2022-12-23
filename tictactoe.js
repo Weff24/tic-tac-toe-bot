@@ -14,7 +14,6 @@ const newGame = function(playerPiece, startDifficulty) {
     difficulty = startDifficulty;
     inGame = true;
     board = new Array(9).fill(0);
-    clearBoard(); /////////////////////////////////////////////////////////
     clearCanvas();
 
     if (playerPiece == "O") {
@@ -22,14 +21,8 @@ const newGame = function(playerPiece, startDifficulty) {
     }  
 };
 
-const clearBoard = function() {
-    for (let i = 0; i < board.length; i++) {
-        document.getElementById("square" + i).innerHTML = "";
-    }
-};
-
 const placePiece = function() {
-    if (inGame && !document.getElementById(this.id).innerHTML) {
+    if (inGame && !board[this.id[6]]) {
         // let piece = X_PIECE;
         if (turn == 1) {
             // piece = O_PIECE;
@@ -297,22 +290,8 @@ const drawBoard = function() {
     let ctx = canvas.getContext("2d");
 
     ctx.lineWidth = "20";
-    ctx.strokeStyle = "rgb(10, 10, 10)"; 
-    for (let col = 1; col <= 2; col++) {
-        ctx.beginPath();
-        ctx.moveTo(170 * col - 10, 0);
-        ctx.lineTo(170 * col - 10, 492);
-        ctx.stroke();
-    }
-
-    for (let row = 1; row <= 2; row++) {
-        ctx.beginPath();
-        ctx.moveTo(0, 170 * row - 10);
-        ctx.lineTo(492, 170 * row - 10);
-        ctx.stroke();
-    }
-
     ctx.strokeStyle = "rgb(175, 120, 85)"; 
+
     for (let col = 1; col <= 2; col++) {
         ctx.beginPath();
         ctx.moveTo(170 * col - 10, 0);
