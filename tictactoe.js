@@ -294,15 +294,15 @@ const drawBoard = function() {
 
     for (let col = 1; col <= 2; col++) {
         ctx.beginPath();
-        ctx.moveTo(170 * col - 10, 0);
-        ctx.lineTo(170 * col - 10, 492);
+        ctx.moveTo(140 * col - 10, 0);
+        ctx.lineTo(140 * col - 10, 401);
         ctx.stroke();
     }
 
     for (let row = 1; row <= 2; row++) {
         ctx.beginPath();
-        ctx.moveTo(0, 170 * row - 10);
-        ctx.lineTo(492, 170 * row - 10);
+        ctx.moveTo(0, 140 * row - 10);
+        ctx.lineTo(401, 140 * row - 10);
         ctx.stroke();
     }
 };
@@ -318,13 +318,13 @@ const drawX = function(square) {
     ctx.strokeStyle = "rgb(96, 59, 42)";
 
     ctx.beginPath();
-    ctx.moveTo(170 * col + 20, 170 * row + 20);
-    ctx.lineTo(170 * col + 130, 170 * row + 130);
+    ctx.moveTo(140 * col + 20, 140 * row + 20);
+    ctx.lineTo(140 * col + 100, 140 * row + 100);
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(170 * col + 20, 170 * row + 130);
-    ctx.lineTo(170 * col + 130, 170 * row + 20);
+    ctx.moveTo(140 * col + 20, 140 * row + 100);
+    ctx.lineTo(140 * col + 100, 140 * row + 20);
     ctx.stroke();
 };
 
@@ -339,7 +339,7 @@ const drawO = function(square) {
     ctx.strokeStyle = "rgb(96, 59, 42)";
 
     ctx.beginPath();
-    ctx.arc(170 * col + 75, 170 * row + 75, 55, 0, 2 * Math.PI);
+    ctx.arc(140 * col + 60, 140 * row + 60, 40, 0, 2 * Math.PI);
     ctx.stroke();
 };
 
@@ -356,8 +356,8 @@ const drawWin = function(first, last) {
     ctx.beginPath(); 
     ctx.lineWidth = "16"; 
     ctx.strokeStyle = "red"; 
-    ctx.moveTo(170 * col1 + 76, 170 * row1 + 75);
-    ctx.lineTo(170 * col2 + 76, 170 * row2 + 75);
+    ctx.moveTo(140 * col1 + 60, 140 * row1 + 60);
+    ctx.lineTo(140 * col2 + 60, 140 * row2 + 60);
     ctx.stroke();
 };
 

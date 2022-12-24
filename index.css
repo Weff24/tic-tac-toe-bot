@@ -9,6 +9,7 @@ body {
 .title {
     font-size: 32px;
     font-weight: bold;
+    margin: 20px 0;
 }
 
 .grid-square {
@@ -24,8 +25,8 @@ body {
 
 #game-board {
     margin: 20px;
-    width: 532px;
-    height: 532px;
+    width: 441px;
+    height: 441px;
     /* background-color: rgb(96, 59, 42); */
     background-color: rgb(146, 99, 70);
     border-radius: 20px;
@@ -44,7 +45,7 @@ body {
 
 #grid-container {
     display: grid;
-    grid-template-columns: 150px 150px 150px;
-    grid-template-rows: 150px 150px 150px;
+    grid-template-columns: 120px 120px 120px;
+    grid-template-rows: 120px 120px 120px;
     gap: 20px;
 }
