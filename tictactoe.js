@@ -113,6 +113,7 @@ const botTurn = function() {
 
 const minmax = function() {
     let idealMoves = [];
+    let idealMovesDepth = [];
     let neutralMoves = [];
     let badMoves = [];
     let badMovesDepth = [];
@@ -126,6 +127,7 @@ const minmax = function() {
 
             if (value[0] < 0) {
                 idealMoves.push(i);
+                idealMovesDepth.push(value[1]);
             } else if (value[0] == 0) {
                 neutralMoves.push(i);
             } else {
@@ -136,7 +138,7 @@ const minmax = function() {
     }
     
     // Select square for CPU move
-    // Randomness for Easy and Mediums first 1 or 2 moves
+    // Randomness for Easy and Medium's first move
     let randomVal = 0;
     if (movesPlayed < 3 && difficulty != 0) {
         randomVal = Math.random() / (3 - difficulty);
@@ -144,7 +146,8 @@ const minmax = function() {
 
     let square = board.indexOf(0);
     if ((idealMoves.length && randomVal < 0.1) || (!neutralMoves.length && !badMoves.length)) {
-        square = idealMoves[Math.floor(Math.random() * idealMoves.length)];
+        // square = idealMoves[Math.floor(Math.random() * idealMoves.length)];
+        square = idealMoves[argmin(idealMovesDepth)];
     } else if ((neutralMoves.length && randomVal < 0.2) || (!badMoves.length)) {
         square = neutralMoves[Math.floor(Math.random() * neutralMoves.length)];
     } else {
@@ -154,6 +157,23 @@ const minmax = function() {
     console.log(neutralMoves) ////////////////////////////////////////////////////
     console.log(badMoves) ////////////////////////////////////////////////////
     return square;
+};
+
+const argmin = function(arr) {
+    if (!arr.length) {
+        return -1;
+    }
+    
+    let min = arr[0];
+    let minIndex = 0;
+    for (let i = 1; i < arr.length; i++) {
+        let randomSelector = Math.random();
+        if ((arr[i] < min) || (arr[i] == min && randomSelector > 0.5)) {
+            min = arr[i];
+            minIndex = i;
+        }
+    }
+    return minIndex;
 };
 
 const argmax = function(arr) {
@@ -171,7 +191,7 @@ const argmax = function(arr) {
         }
     }
     return maxIndex;
-}
+};
 
 const abMinVal = function(moves, alpha, beta) {
     let winner = checkWin(false);
@@ -261,7 +281,7 @@ const maximum = function(values1, values2) {
         return values2;
     } 
 
-    // index 1 result values are the same, so find larger moves/depth to prolong game
+    // index 1 result values are the same, so find smaller moves/depth since assuming player is playing optimally
     if (values1[1] < values2[1]) {
         return values1;
     } else if (values1[1] > values2[1]) {
