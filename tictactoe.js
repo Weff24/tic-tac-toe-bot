@@ -315,14 +315,14 @@ const drawBoard = function() {
     for (let col = 1; col <= 2; col++) {
         ctx.beginPath();
         ctx.moveTo(140 * col - 10, 0);
-        ctx.lineTo(140 * col - 10, 401);
+        ctx.lineTo(140 * col - 10, 402);
         ctx.stroke();
     }
 
     for (let row = 1; row <= 2; row++) {
         ctx.beginPath();
-        ctx.moveTo(0, 140 * row - 10);
-        ctx.lineTo(401, 140 * row - 10);
+        ctx.moveTo(1, 140 * row - 10);
+        ctx.lineTo(402, 140 * row - 10);
         ctx.stroke();
     }
 };
