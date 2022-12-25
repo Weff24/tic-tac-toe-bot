@@ -1,0 +1,19 @@
+{
+  "name": "tic-tac-toe-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "tictactoe.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Weff24/tic-tac-toe-bot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Weff24/tic-tac-toe-bot/issues"
+  },
+  "homepage": "https://github.com/Weff24/tic-tac-toe-bot#readme"
+}
