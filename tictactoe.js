@@ -23,16 +23,12 @@ const newGame = function(playerPiece, startDifficulty) {
 
 const placePiece = function() {
     if (inGame && !board[this.id[6]]) {
-        // let piece = X_PIECE;
         if (turn == 1) {
-            // piece = O_PIECE;
             drawX(this.id[6]);
         } else {
             drawO(this.id[6]);
         }
-        
-        // document.getElementById(this.id).innerHTML = piece;
-        
+                
         board[this.id[6]] = turn;
         movesPlayed += 1;
         
@@ -86,19 +82,12 @@ const checkWin = function(drawWins) {
 ////
 const botTurn = function() {
     let squareNum = minmax();
-    // let piece = X_PIECE;
-    // if (turn == -1) {
-    //     piece = O_PIECE;
-    // }
     if (turn == 1) {
         drawX(squareNum);
     } else {
         drawO(squareNum);
     }
-
-    console.log(squareNum) ////////////////////////////////////////////////////
     
-    // document.getElementById("square" + squareNum).innerHTML = piece;
     board[squareNum] = turn;
     movesPlayed += 1;
     
@@ -138,7 +127,7 @@ const minmax = function() {
     }
     
     // Select square for CPU move
-    // Randomness for Easy and Medium's first move
+    // Randomness for Easy and Medium's first 1 or 2 moves
     let randomVal = 0;
     if (movesPlayed < 3 && difficulty != 0) {
         randomVal = Math.random() / (3 - difficulty);
@@ -146,16 +135,12 @@ const minmax = function() {
 
     let square = board.indexOf(0);
     if ((idealMoves.length && randomVal < 0.1) || (!neutralMoves.length && !badMoves.length)) {
-        // square = idealMoves[Math.floor(Math.random() * idealMoves.length)];
         square = idealMoves[argmin(idealMovesDepth)];
     } else if ((neutralMoves.length && randomVal < 0.2) || (!badMoves.length)) {
         square = neutralMoves[Math.floor(Math.random() * neutralMoves.length)];
     } else {
         square = badMoves[argmax(badMovesDepth)];
     }
-    console.log(idealMoves) ////////////////////////////////////////////////////
-    console.log(neutralMoves) ////////////////////////////////////////////////////
-    console.log(badMoves) ////////////////////////////////////////////////////
     return square;
 };
 
@@ -196,7 +181,6 @@ const argmax = function(arr) {
 const abMinVal = function(moves, alpha, beta) {
     let winner = checkWin(false);
     if (winner) {
-        // return winner * -turn;
         return [winner * -turn, moves];
     }
 
@@ -205,30 +189,24 @@ const abMinVal = function(moves, alpha, beta) {
     for (let i = 0; i < board.length; i++) {
         if (board[i] == 0) {
             board[i] = turn;
-            // board[i] = -1;
-            // value = Math.min(value, abMaxVal(alpha, beta))
             value = minimum(value, abMaxVal(moves, alpha, beta))
 
             board[i] = 0;
             if (value[0] <= alpha) {
-                // return value;
                 return value;
             }
             beta = Math.min(beta, value[0]);
         }
     }
     if (value[0] == 10) {
-        // return 0;
         return [0, moves];
     }
-    // return value;
     return value;
 };
 
 const abMaxVal = function(moves, alpha, beta) {
     let winner = checkWin(false);
     if (winner) {
-        // return winner * -turn;
         return [winner * -turn, moves];
     }
 
@@ -237,23 +215,18 @@ const abMaxVal = function(moves, alpha, beta) {
     for (let i = 0; i < board.length; i++) {
         if (board[i] == 0) {
             board[i] = turn * -1;
-            // board[i] = 1;
-            // value = Math.max(value, abMinVal())
             value = maximum(value, abMinVal(moves, alpha, beta))
 
             board[i] = 0;
             if (value[0] >= beta) {
-                // return value;
                 return value
             }
             alpha = Math.max(alpha, value[0]);
         }
     }
     if (value[0] == -10) {
-        // return 0;
         return [0, moves];
     }
-    // return value;
     return value;
 };
 
@@ -281,7 +254,7 @@ const maximum = function(values1, values2) {
         return values2;
     } 
 
-    // index 1 result values are the same, so find smaller moves/depth since assuming player is playing optimally
+    // index 1 result values are the same, so find smaller moves/depth because we assume player is playing optimally
     if (values1[1] < values2[1]) {
         return values1;
     } else if (values1[1] > values2[1]) {

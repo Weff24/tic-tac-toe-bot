@@ -44,7 +44,6 @@ label {
     position: relative;
     background-color: rgb(249, 249, 249);
     border: 2px solid rgb(146, 99, 70);
-    /* border-radius: 5px; */
     margin: 0 5px;
     padding: 5px 15px;
 }
@@ -59,7 +58,6 @@ input[type="radio"]:checked + label {
     font-size: 16px;
     height: 42px;
     width: 50%;
-    /* border-radius: 12px; */
     margin-top: 20px;
     border: 4px solid rgb(146, 99, 70);
 }
@@ -84,7 +82,6 @@ input[type="radio"]:checked + label {
     margin: 20px;
     width: 441px;
     height: 441px;
-    /* background-color: rgb(96, 59, 42); */
     background-color: rgb(146, 99, 70);
     border-radius: 20px;
 }
