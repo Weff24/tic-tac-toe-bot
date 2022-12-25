@@ -15,6 +15,15 @@
             <div>
                 <!-- <h3>Settings</h3> -->
                 <form id="game-settings">
+                    <legend>Player 1 Piece:</legend>
+                    <div id="piece-options">
+                        <input type="radio" id="x-piece" name="piece" value="X" checked />
+                        <label for="x-piece">X (first)</label>
+
+                        <input type="radio" id="o-piece" name="piece" value="O" />
+                        <label for="o-piece">O</label>
+                    </div><br>
+                    
                     <legend>CPU Difficulty:</legend>
                     <div id="difficulty-options">
                         <input type="radio" id="easy-difficulty" name="difficulty" value="2" />
@@ -25,16 +34,8 @@
 
                         <input type="radio" id="hard-difficulty" name="difficulty" value="0" checked />
                         <label for="hard-difficulty">Hard</label>
-                    </div><br>
-                    
-                    <legend>Player 1 Piece:</legend>
-                    <div id="piece-options">
-                        <input type="radio" id="x-piece" name="piece" value="X" checked />
-                        <label for="x-piece">X (first)</label>
-
-                        <input type="radio" id="o-piece" name="piece" value="O" />
-                        <label for="o-piece">O</label>
                     </div>
+                    
                     <input class="submit-button" type="submit" value="New Game">
                 </form>
             </div>
