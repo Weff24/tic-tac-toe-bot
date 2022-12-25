@@ -1,6 +1,8 @@
+// Constants
 let X_PIECE = "X";
 let O_PIECE = "O";
 
+// Global variables for game
 let movesPlayed = 0;
 let turn = 1; // X = 1 and O = -1
 let difficulty = 2;
@@ -8,6 +10,7 @@ let inGame = false;
 let board = new Array(9).fill(0);
 
 
+// Function for initializing new tic-tac-toe game
 const newGame = function(playerPiece, startDifficulty) {
     movesPlayed = 0;
     turn = 1;
@@ -16,22 +19,27 @@ const newGame = function(playerPiece, startDifficulty) {
     board = new Array(9).fill(0);
     clearCanvas();
 
+    // Bot moves first if Player 1 decides to be "O"
     if (playerPiece == "O") {
         botTurn();
     }  
 };
 
+// Place Player 1's move
 const placePiece = function() {
     if (inGame && !board[this.id[6]]) {
+        // Draw piece to board canvas
         if (turn == 1) {
             drawX(this.id[6]);
         } else {
             drawO(this.id[6]);
         }
-                
+        
+        // Update board state
         board[this.id[6]] = turn;
         movesPlayed += 1;
         
+        // Check if there is a winner or if game is over
         let winner = checkWin(true);
         inGame = !winner && board.includes(0);
 
@@ -43,6 +51,7 @@ const placePiece = function() {
     }
 };
 
+// Check if there is a winner
 const checkWin = function(drawWins) {
     // Check rows and columns
     for (let i = 0; i < 3; i++) {
@@ -80,17 +89,24 @@ const checkWin = function(drawWins) {
 ////
 //// Tic Tac Toe Bot min-max algorithm with alpha-beta pruning
 ////
+
+// Place bot's move
 const botTurn = function() {
+    // Get bot move from min-max algorithm function
     let squareNum = minmax();
+
+    // Draw move to board canvas
     if (turn == 1) {
         drawX(squareNum);
     } else {
         drawO(squareNum);
     }
     
+    // Update board state
     board[squareNum] = turn;
     movesPlayed += 1;
     
+    // Check if there is a winner or if game is over
     let winner = checkWin(true);
     inGame = !winner && board.includes(0);
 
@@ -100,7 +116,9 @@ const botTurn = function() {
     }
 };
 
+// Min-max algorithm function
 const minmax = function() {
+    // Store possible moves that are ideal, neutral, or bad moves (store and consider depth too)
     let idealMoves = [];
     let idealMovesDepth = [];
     let neutralMoves = [];
@@ -114,6 +132,9 @@ const minmax = function() {
             value = minimum(value, abMaxVal(0, -10, 10))
             board[i] = 0;
 
+            // Negative value means bot is winning from this move
+            // Zero value means game will end in a draw from this move
+            // Positive value means player is winning from this move
             if (value[0] < 0) {
                 idealMoves.push(i);
                 idealMovesDepth.push(value[1]);
@@ -126,24 +147,29 @@ const minmax = function() {
         }
     }
     
-    // Select square for CPU move
-    // Randomness for Easy and Medium's first 1 or 2 moves
+    // Select square for bot move
+    // Randomness for Easy and Medium bot's first 1 or 2 moves
     let randomVal = 0;
     if (movesPlayed < 3 && difficulty != 0) {
         randomVal = Math.random() / (3 - difficulty);
     }
 
+    // Select square for bot move
     let square = board.indexOf(0);
     if ((idealMoves.length && randomVal < 0.1) || (!neutralMoves.length && !badMoves.length)) {
+        // Select ideal move that ends the game in the fewest moves (win faster)
         square = idealMoves[argmin(idealMovesDepth)];
     } else if ((neutralMoves.length && randomVal < 0.2) || (!badMoves.length)) {
+        // Select any neutral move
         square = neutralMoves[Math.floor(Math.random() * neutralMoves.length)];
     } else {
+        // Select bad move that prolongs the game (lose slower)
         square = badMoves[argmax(badMovesDepth)];
     }
     return square;
 };
 
+// Get index of minimum value of array
 const argmin = function(arr) {
     if (!arr.length) {
         return -1;
@@ -161,6 +187,7 @@ const argmin = function(arr) {
     return minIndex;
 };
 
+// Get index of maximum value of array
 const argmax = function(arr) {
     if (!arr.length) {
         return -1;
@@ -178,6 +205,7 @@ const argmax = function(arr) {
     return maxIndex;
 };
 
+// Minimize resulting value in MinMax algorithm with alpha-beta pruning to improve performance
 const abMinVal = function(moves, alpha, beta) {
     let winner = checkWin(false);
     if (winner) {
@@ -190,8 +218,9 @@ const abMinVal = function(moves, alpha, beta) {
         if (board[i] == 0) {
             board[i] = turn;
             value = minimum(value, abMaxVal(moves, alpha, beta))
-
             board[i] = 0;
+            
+            // Alpha pruning
             if (value[0] <= alpha) {
                 return value;
             }
@@ -204,6 +233,7 @@ const abMinVal = function(moves, alpha, beta) {
     return value;
 };
 
+// Maximize resulting value in MinMax algorithm with alpha-beta pruning to improve performance
 const abMaxVal = function(moves, alpha, beta) {
     let winner = checkWin(false);
     if (winner) {
@@ -216,8 +246,9 @@ const abMaxVal = function(moves, alpha, beta) {
         if (board[i] == 0) {
             board[i] = turn * -1;
             value = maximum(value, abMinVal(moves, alpha, beta))
-
             board[i] = 0;
+            
+            // Beta pruning
             if (value[0] >= beta) {
                 return value
             }
@@ -230,14 +261,16 @@ const abMaxVal = function(moves, alpha, beta) {
     return value;
 };
 
+// Gets minimum of two objects where each object = [value, depth]
 const minimum = function(values1, values2) {
+    // Select object with smaller first value
     if (values1[0] < values2[0]) {
         return values1;
     } else if (values1[0] > values2[0]) {
         return values2;
     } 
 
-    // index 1 result values are the same, so find larger moves/depth to prolong game
+    // If index 0 result values are the same, find larger depth to prolong game
     if (values1[1] > values2[1]) {
         return values1;
     } else if (values1[1] < values2[1]) {
@@ -247,14 +280,17 @@ const minimum = function(values1, values2) {
     return values1;
 };
 
+// Gets maximum of two objects where each object = [value, depth]
 const maximum = function(values1, values2) {
+    // Select object with larger first value
     if (values1[0] > values2[0]) {
         return values1;
     } else if (values1[0] < values2[0]) {
         return values2;
     } 
 
-    // index 1 result values are the same, so find smaller moves/depth because we assume player is playing optimally
+    // If index 0 result values are the same, find smaller depth because 
+    // we assume player is playing optimally to win the game as fast as possible
     if (values1[1] < values2[1]) {
         return values1;
     } else if (values1[1] > values2[1]) {
@@ -268,16 +304,20 @@ const maximum = function(values1, values2) {
 ////
 //// Draw board and pieces on canvas
 ////
+
+// Clear board canvas and redraw empty tic-tac-toe board on canvas
 const clearCanvas = function() {
     let canvas = document.getElementById("game-canvas");
     let ctx = canvas.getContext("2d");
 
+    // Clear board canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Redraw board
+    // Redraw board canvas
     drawBoard();
 };
 
+// Draw emtpy tic-tac-toe board on canvas
 const drawBoard = function() {
     let canvas = document.getElementById("game-canvas");
     let ctx = canvas.getContext("2d");
@@ -285,6 +325,7 @@ const drawBoard = function() {
     ctx.lineWidth = "20";
     ctx.strokeStyle = "rgb(175, 120, 85)"; 
 
+    // Draw vertical lines
     for (let col = 1; col <= 2; col++) {
         ctx.beginPath();
         ctx.moveTo(140 * col - 10, 0);
@@ -292,6 +333,7 @@ const drawBoard = function() {
         ctx.stroke();
     }
 
+    // Draw horizontal lines
     for (let row = 1; row <= 2; row++) {
         ctx.beginPath();
         ctx.moveTo(1, 140 * row - 10);
@@ -300,6 +342,7 @@ const drawBoard = function() {
     }
 };
 
+// Draw X piece on canvas
 const drawX = function(square) {
     let canvas = document.getElementById("game-canvas");
     let ctx = canvas.getContext("2d");
@@ -321,6 +364,7 @@ const drawX = function(square) {
     ctx.stroke();
 };
 
+// Draw O piece on canvas
 const drawO = function(square) {
     let canvas = document.getElementById("game-canvas");
     let ctx = canvas.getContext("2d");
@@ -336,6 +380,7 @@ const drawO = function(square) {
     ctx.stroke();
 };
 
+// Draw red line to signal winner
 const drawWin = function(first, last) {
     let canvas = document.getElementById("game-canvas");
     let ctx = canvas.getContext("2d");
