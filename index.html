@@ -43,6 +43,20 @@
 
     <section class="game-container">
         <div id="game-board">
+            <div id="board-overlay">
+                <div id="win-overlay" class="disabled">
+                    <p>You Win!</p>
+                    <button id="play-again" class="submit-button">Play Again</button>
+                </div>
+                <div id="lose-overlay" class="disabled">
+                    <p>You Lose :0</p>
+                    <button id="try-again" class="submit-button">Try Again</button>
+                </div>
+                <div id="draw-overlay" class="disabled">
+                    <p>Draw</p>
+                    <button id="draw-try-again" class="submit-button">Try Again</button>
+                </div>
+            </div>
             <canvas id="game-canvas" width="402" height="402"></canvas>
             <div id="grid-container">
                 <div id="square0" class="grid-square"></div>

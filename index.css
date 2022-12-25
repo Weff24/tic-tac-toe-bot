@@ -15,6 +15,10 @@ legend {
     margin-bottom: 10px;
 }
 
+.disabled {
+    display: none;
+}
+
 .title {
     font-size: 32px;
     font-weight: bold;
@@ -68,21 +72,21 @@ input[type="radio"]:checked + label {
 }
 
 .grid-square {
+    background-color: rgba(250, 230, 200, 0.925);
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     height: 100%;
     border: black solid 1px;
-    background-color: rgba(250, 230, 200, 0.925);
     margin: 20px;
 }
 
 #game-board {
+    background-color: rgb(146, 99, 70);
     margin: 20px;
     width: 441px;
     height: 441px;
-    background-color: rgb(146, 99, 70);
     border-radius: 20px;
 }
 
@@ -103,5 +107,26 @@ input[type="radio"]:checked + label {
 }
 
 #game-board {
+    position: relative;
     margin: auto;
+}
+
+#board-overlay {
+    background-color: rgba(51, 51, 51, 0.4);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    z-index: 3;
+}
+
+#board-overlay > div {
+    margin-top: 40%;
+}
+
+#lose-overlay > p, #win-overlay > p, #draw-overlay > p {
+    font-size: 32px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 0;
 }

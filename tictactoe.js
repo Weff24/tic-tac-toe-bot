@@ -22,7 +22,12 @@ const newGame = function(playerPiece, startDifficulty) {
     // Bot moves first if Player 1 decides to be "O"
     if (playerPiece == "O") {
         botTurn();
-    }  
+    }
+
+    document.getElementById("board-overlay").classList.add("disabled");
+    document.getElementById("win-overlay").classList.add("disabled");
+    document.getElementById("lose-overlay").classList.add("disabled");
+    document.getElementById("draw-overlay").classList.add("disabled");
 };
 
 // Place Player 1's move
@@ -47,7 +52,20 @@ const placePiece = function() {
         if (inGame) {
             turn *= -1;
             botTurn();
+        } else {
+            endGameOverlay(winner);
         }
+    }
+};
+
+const endGameOverlay = function(winner) {
+    document.getElementById("board-overlay").classList.remove("disabled");
+    if (winner == 1) {
+        document.getElementById("win-overlay").classList.remove("disabled");
+    } else if (winner == -1) {
+        document.getElementById("lose-overlay").classList.remove("disabled");
+    } else {
+        document.getElementById("draw-overlay").classList.remove("disabled");
     }
 };
 
@@ -113,6 +131,8 @@ const botTurn = function() {
     // Update game turn state
     if (inGame) {
         turn *= -1;
+    } else {
+        endGameOverlay(winner);
     }
 };
 
@@ -410,7 +430,22 @@ window.onload = function() {
         e.preventDefault();
 
         const settingsData = new FormData(e.target);
-        newGame(settingsData.get("piece"), settingsData.get("difficulty"));      
+        newGame(settingsData.get("piece"), settingsData.get("difficulty"));
+    });
+
+    document.getElementById("play-again").addEventListener("click", (e) => {
+        const settingsData = new FormData(document.getElementById("game-settings"));
+        newGame(settingsData.get("piece"), settingsData.get("difficulty"));
+    });
+
+    document.getElementById("try-again").addEventListener("click", (e) => {
+        const settingsData = new FormData(document.getElementById("game-settings"));
+        newGame(settingsData.get("piece"), settingsData.get("difficulty"));
+    });
+
+    document.getElementById("draw-try-again").addEventListener("click", (e) => {
+        const settingsData = new FormData(document.getElementById("game-settings"));
+        newGame(settingsData.get("piece"), settingsData.get("difficulty"));
     });
 
     for (let i = 0; i < 9; i++) {
