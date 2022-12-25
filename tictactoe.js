@@ -219,10 +219,10 @@ const abMinVal = function(moves, alpha, beta) {
     }
     if (value[0] == 10) {
         // return 0;
-        return [0, moves]
+        return [0, moves];
     }
     // return value;
-    return value
+    return value;
 };
 
 const abMaxVal = function(moves, alpha, beta) {
@@ -251,10 +251,10 @@ const abMaxVal = function(moves, alpha, beta) {
     }
     if (value[0] == -10) {
         // return 0;
-        return [0, moves]
+        return [0, moves];
     }
     // return value;
-    return value
+    return value;
 };
 
 const minimum = function(values1, values2) {
