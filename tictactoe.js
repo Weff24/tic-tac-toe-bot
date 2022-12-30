@@ -3,6 +3,7 @@ let X_PIECE = "X";
 let O_PIECE = "O";
 
 // Global variables for game
+let player = "X";
 let movesPlayed = 0;
 let turn = 1; // X = 1 and O = -1
 let difficulty = 2;
@@ -12,6 +13,7 @@ let board = new Array(9).fill(0);
 
 // Function for initializing new tic-tac-toe game
 const newGame = function(playerPiece, startDifficulty) {
+    player = playerPiece;
     movesPlayed = 0;
     turn = 1;
     difficulty = startDifficulty;
@@ -60,9 +62,9 @@ const placePiece = function() {
 
 const endGameOverlay = function(winner) {
     document.getElementById("board-overlay").classList.remove("disabled");
-    if (winner == 1) {
+    if ((winner == 1 && player == "X") || (winner == -1 && player == "O")) {
         document.getElementById("win-overlay").classList.remove("disabled");
-    } else if (winner == -1) {
+    } else if ((winner == 1 && player == "O") || (winner == -1 && player == "X")) {
         document.getElementById("lose-overlay").classList.remove("disabled");
     } else {
         document.getElementById("draw-overlay").classList.remove("disabled");
@@ -198,6 +200,7 @@ const argmin = function(arr) {
     let min = arr[0];
     let minIndex = 0;
     for (let i = 1; i < arr.length; i++) {
+        // Random selector adds some variability in bot's playstyle
         let randomSelector = Math.random();
         if ((arr[i] < min) || (arr[i] == min && randomSelector > 0.5)) {
             min = arr[i];
@@ -216,6 +219,7 @@ const argmax = function(arr) {
     let max = arr[0];
     let maxIndex = 0;
     for (let i = 1; i < arr.length; i++) {
+        // Random selector adds some variability in bot's playstyle
         let randomSelector = Math.random();
         if ((arr[i] > max) || (arr[i] == max && randomSelector > 0.5)) {
             max = arr[i];
@@ -428,7 +432,6 @@ window.onload = function() {
     
     document.getElementById("game-settings").addEventListener("submit", (e) => {
         e.preventDefault();
-
         const settingsData = new FormData(e.target);
         newGame(settingsData.get("piece"), settingsData.get("difficulty"));
     });
